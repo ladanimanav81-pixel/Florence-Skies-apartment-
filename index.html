@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Florence Skies Gold | Royal Residential Services & Enterprise Portal</title>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f59e0b'><rect width='24' height='24'/></svg>">
+    <style>
+        body {
+            background-color: #030712;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+        #site-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .glass-card {
+            background: rgba(10, 17, 30, 0.88);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(245, 158, 11, 0.22);
+            box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.6);
+        }
+        .glass-nav {
+            background: rgba(3, 7, 18, 0.95);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+        .gold-title {
+            background: linear-gradient(135deg, #fef08a 0%, #f59e0b 45%, #b45309 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 25px rgba(245, 158, 11, 0.35);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        @keyframes pageSlideIn {
+            0% { opacity: 0; transform: translateY(18px) scale(0.98); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0px); }
+        }
+        .tab-content { animation: pageSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        #page-transition-overlay {
+            position: fixed; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.25), transparent);
+            z-index: 99; pointer-events: none; transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        #page-transition-overlay.animate { transform: translateX(200%); }
+    </style>
+</head>
+<body class="text-slate-100 font-sans antialiased selection:bg-amber-500 selection:text-slate-950 min-h-screen flex flex-col justify-between">
+
+    <!-- TRANSITION OVERLAY ANIMATION -->
+    <div id="page-transition-overlay"></div>
+
+    <!-- REAL-TIME IMMERSIVE CANVAS BACKGROUND ANIMATION ENGINE -->
+    <canvas id="site-canvas"></canvas>
+
+    <!-- FOREGROUND APP CONTAINER -->
+    <div id="app" class="relative z-10 flex flex-col min-h-screen justify-between w-full">
+       <div>
+            <!-- Top Utility Bar -->
+            <header class="glass-nav text-slate-300 px-4 py-2.5 flex justify-between items-center border-b border-slate-800/80 text-[11px]">
+                <div class="flex items-center space-x-2">
+                    <span class="bg-amber-500 w-2.5 h-2.5 rounded-full inline-block animate-pulse shadow-sm shadow-amber-500"></span>
+                    <span class="font-bold tracking-wider uppercase text-amber-400 truncate max-w-[200px] sm:max-w-none">Florence Skies Gold Operations & Royal Services Portal</span>
+                </div>
+                <div class="font-mono text-slate-400 hidden md:flex items-center space-x-4">
+                    <span>Project Code: FSG-AHV-902</span>
+                    <span class="text-slate-600">|</span>
+                    <span id="live-utc-clock" class="text-amber-400">00:00:00 UTC</span>
+                </div>
+            </header>
+
+            <!-- Main Navigation -->
+            <nav class="glass-nav sticky top-0 z-40 border-b border-amber-500/20 px-4 py-3 shadow-2xl">
+                <div class="flex space-x-5 text-xs font-semibold overflow-x-auto no-scrollbar items-center max-w-7xl mx-auto">
+                    <button onclick="switchTab('overview')" id="nav-overview" class="pb-1 border-b-2 border-amber-500 text-amber-400 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider">
+                        Overview
+                    </button>
+                    <button onclick="switchTab('services')" id="nav-services" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider flex items-center space-x-1">
+                        <span class="text-amber-400">👑</span>
+                        <span>Royal Concierge</span>
+                    </button>
+                    <button onclick="switchTab('telemetry')" id="nav-telemetry" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider">
+                        Telemetry
+                    </button>
+                    <button onclick="switchTab('logistics')" id="nav-logistics" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider">
+                        Logistics & Fleet
+                    </button>
+                    <button onclick="switchTab('compliance')" id="nav-compliance" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider">
+                        Safety & OSHA
+                    </button>
+                    <button onclick="switchTab('demo')" id="nav-demo" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider flex items-center space-x-1.5">
+                        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-ping"></span>
+                        <span>Simulation Engine</span>
+                    </button>
+                    <button onclick="switchTab('vision')" id="nav-vision" class="pb-1 border-b-2 border-transparent text-amber-300 hover:text-white cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider flex items-center space-x-1">
+                        <span class="text-amber-400">★</span>
+                        <span>Final Vision</span>
+                    </button>
+                    <button onclick="switchTab('privacy')" id="nav-privacy" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider">
+                        Privacy Policy
+                    </button>
+                    <button onclick="switchTab('terms')" id="nav-terms" class="pb-1 border-b-2 border-transparent text-slate-400 hover:text-slate-200 cursor-pointer transition-colors whitespace-nowrap uppercase tracking-wider">
+                        Terms & Conditions
+                    </button>
+                </div>
+            </nav>
+
+            <!-- HERO SECTION -->
+            <section id="hero-section" class="glass-card my-4 mx-4 sm:mx-auto max-w-6xl p-6 sm:p-12 rounded-none border border-amber-500/30 shadow-2xl relative overflow-hidden transition-all duration-300">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="border-l-4 border-amber-500 pl-4 mb-4">
+                    <span class="text-amber-400 text-[11px] font-mono uppercase tracking-widest">Elite High-Rise Residential Infrastructure & Royal Services</span>
+                    <h1 class="text-4xl sm:text-6xl font-black uppercase tracking-tight mt-2 gold-title">
+                        Florence Skies Gold
+                    </h1>
+                </div>
+                <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-6 max-w-3xl">
+                    Executing precision structural engineering standards, real-time material stress telemetry, advanced tower crane choreography, and rigorous occupational quality control protocols across all luxury residential towers.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-slate-800 text-xs font-mono">
+                    <div class="bg-slate-950/80 p-3.5 border border-slate-800">
+                        <span class="text-slate-400 uppercase text-[10px] block">Active Workforce</span>
+                        <span class="text-amber-400 font-bold mt-1 block text-sm">114 Personnel</span>
+                    </div>
+                    <div class="bg-slate-950/80 p-3.5 border border-slate-800">
+                        <span class="text-slate-400 uppercase text-[10px] block">Milestone Progress</span>
+                        <span class="text-slate-100 font-bold mt-1 block text-sm">Stage 5 of 7</span>
+                    </div>
+                    <div class="bg-slate-950/80 p-3.5 border border-slate-800">
+                        <span class="text-slate-400 uppercase text-[10px] block">Safety Rating</span>
+                        <span class="text-emerald-400 font-bold mt-1 block text-sm">100% Compliant</span>
+                    </div>
+                    <div class="bg-slate-950/80 p-3.5 border border-slate-800">
+                        <span class="text-slate-400 uppercase text-[10px] block">Structural Health</span>
+                        <span class="text-amber-300 font-bold mt-1 block text-sm">Optimal (99.8%)</span>
+                    </div>
+                </div>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <button onclick="switchTab('terms'); document.getElementById('booking-section').scrollIntoView({behavior: 'smooth'})" class="bg-amber-500 hover:bg-amber-400 text-slate-950 px-6 py-3 text-xs font-black uppercase tracking-wider rounded-none transition-all cursor-pointer shadow-lg shadow-amber-500/25">
+                        Book Royal Residence
+                    </button>
+                    <button onclick="switchTab('vision')" class="bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/30 px-6 py-3 text-xs font-bold uppercase tracking-wider rounded-none transition-all cursor-pointer">
+                        View Final Project Vision
+                    </button>
+                </div>
+            </section>
+
+            <!-- Main Content Area -->
+            <main class="max-w-6xl mx-auto px-4 py-2 min-h-[450px]">
+                
+                <!-- Overview Tab -->
+                <div id="tab-overview" class="tab-content space-y-6">
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300 px-1">Tower Block Deliverables & Milestones</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-card p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h4 class="font-bold text-sm text-white">Tower A Superstructure & Podium</h4>
+                                <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 uppercase">Completed</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mb-6 leading-relaxed">High-density M40 concrete casting, post-tensioned slab installation, and core shear wall alignment finalized according to structural blueprints.</p>
+                            <div class="w-full bg-slate-950 h-2 mb-2">
+                                <div class="bg-emerald-500 h-2 w-full"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 block uppercase font-mono">Verification: Approved by Chief Structural Engineer</span>
+                        </div>
+                        <div class="glass-card p-6">
+                            <div class="flex justify-between items-start mb-3">
+                                <h4 class="font-bold text-sm text-white">Tower B Framing & MEP Conduits</h4>
+                                <span class="text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2 py-0.5 uppercase">In Progress</span>
+                            </div>
+                            <p class="text-xs text-slate-300 mb-6 leading-relaxed">Erection of primary load-bearing steel columns, fire suppression piping conduits, and electrical channeling across upper residential levels.</p>
+                            <div class="w-full bg-slate-950 h-2 mb-2">
+                                <div class="bg-amber-500 h-2 w-3/4"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 block uppercase font-mono">Verification: 75% Milestone Achieved</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Royal Services Tab -->
+                <div id="tab-services" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 space-y-6">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300">Royal Concierge & Luxury Residential Services</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-2">
+                                <span class="block text-amber-400 font-bold text-sm uppercase tracking-wider">Executive Concierge</span>
+                                <ul class="text-xs text-slate-300 list-disc list-inside space-y-1.5">
+                                    <li>24/7 Front Desk & Security</li>
+                                    <li>Personalized Travel & Event Planning</li>
+                                    <li>VIP Reservations & Access</li>
+                                    <li>Package Acceptance & Delivery</li>
+                                </ul>
+                            </div>
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-2">
+                                <span class="block text-amber-400 font-bold text-sm uppercase tracking-wider">Bespoke Home Services</span>
+                                <ul class="text-xs text-slate-300 list-disc list-inside space-y-1.5">
+                                    <li>Professional Housekeeping</li>
+                                    <li>Dry Cleaning & Laundry Pickup</li>
+                                    <li>In-Residence Dining</li>
+                                    <li>Gourmet Grocery Stocking</li>
+                                </ul>
+                            </div>
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-2">
+                                <span class="block text-amber-400 font-bold text-sm uppercase tracking-wider">Exclusive Amenities</span>
+                                <ul class="text-xs text-slate-300 list-disc list-inside space-y-1.5">
+                                    <li>Private Rooftop Sky Deck & Lounge</li>
+                                    <li>State-of-the-Art Fitness Center & Spa</li>
+                                    <li>Temperature-Controlled Pool</li>
+                                    <li>Valet Parking & Car Wash</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ENGINEERING TELEMETRY TAB -->
+                <div id="tab-telemetry" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 sm:p-8 space-y-6">
+                        <div class="border-b border-slate-800 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                            <div>
+                                <span class="text-amber-400 text-xs font-mono uppercase tracking-widest block">Real-Time IoT Sensor Grid</span>
+                                <h3 class="text-xl font-black uppercase tracking-wider text-white">Advanced Engineering Telemetry & Structural Stress Monitoring</h3>
+                            </div>
+                            <span class="text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1">Frequency: 100Hz Live Stream</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Continuous data acquisition is deployed across all structural columns, shear walls, and crane jibs. Telemetry feeds are analyzed automatically via AI models to detect micro-vibrations, thermal gradients, and wind shear tolerance thresholds instantly.
+                        </p>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs font-mono min-w-[700px]">
+                                <thead>
+                                    <tr class="border-b border-slate-800 text-slate-400 text-[11px]">
+                                        <th class="pb-3 font-semibold">Sensor ID</th>
+                                        <th class="pb-3 font-semibold">Deployment Zone</th>
+                                        <th class="pb-3 font-semibold">Parameter Monitored</th>
+                                        <th class="pb-3 font-semibold">Live Sensor Reading</th>
+                                        <th class="pb-3 font-semibold">Safety Threshold Limit</th>
+                                        <th class="pb-3 font-semibold">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-800/80 text-slate-300 text-xs">
+                                    <tr>
+                                        <td class="py-3.5 text-amber-400">SEN-FSG-01</td>
+                                        <td class="py-3.5">Tower A - Jib Apex</td>
+                                        <td class="py-3.5">Wind Shear Velocity</td>
+                                        <td class="py-3.5 font-bold text-white">16.4 km/h</td>
+                                        <td class="py-3.5 text-slate-500">&lt; 45.0 km/h</td>
+                                        <td class="py-3.5 text-emerald-400 font-bold">NOMINAL</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3.5 text-amber-400">SEN-FSG-02</td>
+                                        <td class="py-3.5">Curing Slab - Floor 5</td>
+                                        <td class="py-3.5">Exothermic Core Temp</td>
+                                        <td class="py-3.5 font-bold text-white">41.2 °C</td>
+                                        <td class="py-3.5 text-slate-500">&lt; 65.0 °C</td>
+                                        <td class="py-3.5 text-emerald-400 font-bold">OPTIMAL</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3.5 text-amber-400">SEN-FSG-03</td>
+                                        <td class="py-3.5">Perimeter Shoring Wall</td>
+                                        <td class="py-3.5">Lateral Soil Displacement</td>
+                                        <td class="py-3.5 font-bold text-white">0.02 mm</td>
+                                        <td class="py-3.5 text-slate-500">&lt; 3.00 mm</td>
+                                        <td class="py-3.5 text-emerald-400 font-bold">SECURE</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3.5 text-amber-400">SEN-FSG-04</td>
+                                        <td class="py-3.5">Hoist Cable Drum B</td>
+                                        <td class="py-3.5">Tensile Strain Load</td>
+                                        <td class="py-3.5 font-bold text-white">142 MPa</td>
+                                        <td class="py-3.5 text-slate-500">&lt; 250 MPa</td>
+                                        <td class="py-3.5 text-emerald-400 font-bold">STABLE</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-3.5 text-amber-400">SEN-FSG-05</td>
+                                        <td class="py-3.5">Foundation Raft Mat</td>
+                                        <td class="py-3.5">Hydrostatic Pore Pressure</td>
+                                        <td class="py-3.5 font-bold text-white">12.8 kPa</td>
+                                        <td class="py-3.5 text-slate-500">&lt; 30.0 kPa</td>
+                                        <td class="py-3.5 text-emerald-400 font-bold">BALANCED</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SITE LOGISTICS & FLEET TAB -->
+                <div id="tab-logistics" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 sm:p-8 space-y-6">
+                        <div class="border-b border-slate-800 pb-4">
+                            <span class="text-amber-400 text-xs font-mono uppercase tracking-widest block">Heavy Machinery & Supply Chain Operations</span>
+                            <h3 class="text-xl font-black uppercase tracking-wider text-white">Comprehensive Site Logistics & Fleet Management</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Florence Skies Gold employs an automated heavy equipment choreography system. All tower cranes, concrete boom pumps, and transit mixer fleets are synchronized via real-time GPS and load sensors.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-amber-400 font-bold text-sm">TOWER CRANE T-1 (SECTOR A)</span>
+                                    <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5">ACTIVE</span>
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">Heavy-duty luffing jib crane with 12-ton maximum lifting radius, equipped with automated anti-collision radar.</p>
+                            </div>
+
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-amber-400 font-bold text-sm">TOWER CRANE T-2 (SECTOR B)</span>
+                                    <span class="text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2 py-0.5">ACTIVE</span>
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">High-speed hammerhead crane dedicated to rapid formwork positioning and facade panel installation across Tower B.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SAFETY & OSHA TAB -->
+                <div id="tab-compliance" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 sm:p-8 space-y-6">
+                        <div class="border-b border-slate-800 pb-4">
+                            <span class="text-amber-400 text-xs font-mono uppercase tracking-widest block">Occupational Health & Security Protocols</span>
+                            <h3 class="text-xl font-black uppercase tracking-wider text-white">OSHA 1926 & ISO 45001 Safety Management System</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Florence Skies Gold maintains an uncompromising zero-accident safety policy. Every personnel member is tracked via biometric RFID badges ensuring mandatory safety gear compliance.
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-2">
+                                <span class="text-amber-400 font-bold block text-sm">BIOMETRIC GATE ACCESS</span>
+                                <p class="text-slate-400 text-[11px]">Automated turnstiles with breathalyzer fatigue testing and PPE RFID tag scanners.</p>
+                            </div>
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-2">
+                                <span class="text-amber-400 font-bold block text-sm">FALL PROTECTION SYSTEMS</span>
+                                <p class="text-slate-400 text-[11px]">Perimeter safety nets, retractable lifeline inertia reels, and engineered toe-boards.</p>
+                            </div>
+                            <div class="bg-slate-950 p-5 border border-slate-800 space-y-2">
+                                <span class="text-amber-400 font-bold block text-sm">DAILY TOOLBOX BRIEFINGS</span>
+                                <p class="text-slate-400 text-[11px]">Mandatory 15-minute hazard identification safety huddle conducted every morning at 07:00 IST.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SIMULATION ENGINE TAB -->
+                <div id="tab-demo" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 sm:p-8 space-y-6">
+                        <div class="border-b border-slate-800 pb-4">
+                            <span class="text-amber-400 text-xs font-mono uppercase tracking-widest block">Digital Twin & Structural Simulation</span>
+                            <h3 class="text-xl font-black uppercase tracking-wider text-white">Florence Skies Gold 3D Digital Twin Engine</h3>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Our advanced BIM simulation engine runs real-time finite element analysis (FEA) to simulate wind tunnel dynamics, seismic zone IV stress distribution, and concrete curing curves.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Final Vision Tab -->
+                <div id="tab-vision" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 sm:p-8 space-y-4">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 gap-2">
+                            <div>
+                                <span class="text-amber-400 text-xs font-mono uppercase tracking-widest block">Completed Project Blueprint Vision</span>
+                                <h3 class="text-xl font-black uppercase tracking-wider text-white">Florence Skies Gold | Final Architecture Render</h3>
+                            </div>
+                            <span class="text-xs font-mono bg-amber-500/10 text-amber-400 border border-amber-500/30 px-3 py-1">Approved Master Plan</span>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Yeh 3D Architectural render darshata hai ki jab construction poora ho jayega, tab Florence Skies Gold ka final look kaisa dikhega[cite: 1]. Isme twin luxury residential towers, podium-level landscaped gardens, modern commercial arcade, aur wide access roads shamil hain[cite: 1].
+                        </p>
+                        <div class="relative w-full overflow-hidden border border-amber-500/30 shadow-2xl bg-slate-950">
+                            <img src="watermarked_img_6497385501888601186.png" alt="Florence Skies Gold Final Render" class="w-full h-auto object-cover hover:scale-105 transition-transform duration-700">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Privacy Policy Tab -->
+                <div id="tab-privacy" class="tab-content hidden space-y-4">
+                    <div class="glass-card p-6 space-y-3">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300">Privacy Policy & Data Governance</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            Florence Skies Gold Enterprise respects your privacy and is committed to protecting your personal and corporate information. All data is retained strictly for structural documentation and site accountability.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions Tab (WITH BOOKING FORM AT THE BOTTOM) -->
+                <div id="tab-terms" class="tab-content hidden space-y-6">
+                    <div class="glass-card p-6 sm:p-8 space-y-4">
+                        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-300">Terms & Conditions of Portal Access</h3>
+                        <p class="text-xs text-slate-300 leading-relaxed">
+                            By accessing or utilizing the Florence Skies Gold enterprise portal and booking system, you agree to comply with and be bound by the following terms and conditions.
+                        </p>
+                        <div class="space-y-3 text-xs text-slate-300">
+                            <h4 class="font-bold text-amber-400 uppercase tracking-wider">1. Proprietary Rights</h4>
+                            <p>All architectural blueprints, structural calculations, live telemetry feeds, and financial audit reports provided via this platform remain the exclusive intellectual property of Florence Skies Gold Enterprise.</p>
+                            
+                            <h4 class="font-bold text-amber-400 uppercase tracking-wider">2. Authorized Access Only</h4>
+                            <p>Access is strictly restricted to verified engineers, contractors, registered prospective buyers, and institutional investors. Unauthorized data scraping or redistribution is prohibited.</p>
+
+                            <h4 class="font-bold text-amber-400 uppercase tracking-wider">3. Limitation of Liability</h4>
+                            <p>Project schedules and simulation metrics are subject to engineering modifications based on continuous on-site telemetry audits and municipal building approvals.</p>
+                        </div>
+                    </div>
+
+                    <!-- ROYAL RESIDENCE & SITE AUDIT BOOKING FORM -->
+                    <div id="booking-section" class="glass-card p-6 sm:p-10 border border-amber-500/40 shadow-2xl relative overflow-hidden mt-8">
+                        <div class="absolute top-0 right-0 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                        <div class="border-l-4 border-amber-500 pl-4 mb-6">
+                            <span class="text-amber-400 text-xs font-mono uppercase tracking-widest">Secure Your Place in Luxury</span>
+                            <h2 class="text-2xl sm:text-3xl font-black uppercase tracking-tight mt-1 text-white">Royal Residence & Site Audit Booking Form</h2>
+                        </div>
+                        <p class="text-xs sm:text-sm text-slate-300 mb-8 max-w-2xl leading-relaxed">
+                            Please fill out the comprehensive information form below to book a private VIP site tour, request structural engineering audit files, or reserve your luxury residence at Florence Skies Gold.
+                        </p>
+
+                        <form onsubmit="event.preventDefault(); alert('Booking request submitted successfully! Our executive concierge will contact you within 24 hours.');" class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs font-mono">
+                            <div>
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Full Name / Corporate Entity *</label>
+                                <input type="text" required placeholder="e.g. Rajesh Sharma / Apex Holdings" class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Official Email Address *</label>
+                                <input type="email" required placeholder="e.g. rajesh@florenceskies.gold" class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Mobile Phone Number *</label>
+                                <input type="tel" required placeholder="+91 98765 43210" class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Request Category *</label>
+                                <select class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500">
+                                    <option>Luxury Residence Booking (3BHK / 4BHK Penthouse)</option>
+                                    <option>Structural Engineering Audit Access</option>
+                                    <option>Commercial Arcade Retail Space Reservation</option>
+                                    <option>Institutional Investor Briefing</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Preferred Tower / Floor Preference</label>
+                                <select class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500">
+                                    <option>Tower A (High-Rise Residential)</option>
+                                    <option>Tower B (Sky Deck & Helipad Access)</option>
+                                    <option>Podium Level Commercial Suite</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Target Visit / Consultation Date</label>
+                                <input type="date" class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-slate-400 uppercase text-[10px] mb-1.5">Specific Requirements / Notes</label>
+                                <textarea rows="3" placeholder="Mention any bespoke interior customization or specific technical audit requirements..." class="w-full bg-slate-950 p-3 border border-slate-700 text-white rounded-none focus:outline-none focus:border-amber-500"></textarea>
+                            </div>
+                            <div class="sm:col-span-2 pt-2">
+                                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 py-3.5 text-xs font-black uppercase tracking-widest rounded-none transition-all cursor-pointer shadow-lg shadow-amber-500/25">
+                                    Submit Formal Booking & Information Request
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </main>
+       </div>
+
+        <!-- Modal Dialog -->
+        <div id="audit-modal" class="hidden fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50">
+            <div class="glass-card p-6 max-w-md w-full border border-amber-500/40 shadow-2xl">
+                <h3 class="font-bold text-sm uppercase tracking-wider text-white mb-1">Request Engineering Audit</h3>
+                <p class="text-xs text-slate-300 mb-5">Submit verified stakeholder credentials for official review of Florence Skies Gold operations.</p>
+                <input type="text" placeholder="Authorized Stakeholder Name / ID" class="w-full bg-slate-950 p-3 border border-slate-700 text-xs text-white mb-3 rounded-none focus:outline-none focus:border-amber-500 placeholder:text-slate-500 font-mono">
+                <input type="email" placeholder="Official Engineering Email" class="w-full bg-slate-950 p-3 border border-slate-700 text-xs text-white mb-6 rounded-none focus:outline-none focus:border-amber-500 placeholder:text-slate-500 font-mono">
+                <div class="flex justify-end space-x-3">
+                    <button onclick="toggleModal(false)" class="px-4 py-2.5 border border-slate-700 text-xs uppercase font-semibold bg-slate-900 text-slate-300 hover:bg-slate-800 cursor-pointer">Cancel</button>
+                    <button onclick="toggleModal(false)" class="px-5 py-2.5 bg-amber-500 text-slate-950 text-xs uppercase font-black hover:bg-amber-400 cursor-pointer shadow-md shadow-amber-500/20">Submit Audit Request</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="glass-nav border-t border-slate-800/80 py-6 px-4 text-xs text-slate-400 mt-16">
+            <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 text-center sm:text-left">
+                <div>&copy; 2026 Florence Skies Gold Enterprise. All rights reserved.</div>
+                <div class="flex space-x-6">
+                    <button onclick="switchTab('privacy')" class="hover:text-amber-400 underline bg-transparent border-none cursor-pointer text-xs text-slate-400">Privacy Policy</button>
+                    <button onclick="switchTab('terms')" class="hover:text-amber-400 underline bg-transparent border-none cursor-pointer text-xs text-slate-400">Terms & Conditions</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- CANVAS ANIMATION & PAGE TRANSITION ENGINE -->
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const utcString = now.toUTCString().slice(17, 25) + " UTC";
+            const clockEl = document.getElementById('live-utc-clock');
+            if (clockEl) clockEl.innerText = utcString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const canvas = document.getElementById('site-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let craneAngle1 = 0;
+        let craneAngle2 = 0;
+        let cableLen1 = 70;
+        let cableLen2 = 100;
+        let cableDir1 = 1;
+        let cableDir2 = -1;
+        
+        const particles = [];
+        const particleCount = window.innerWidth < 768 ? 25 : 45;
+        for(let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: canvas.height - Math.random() * 300,
+                radius: Math.random() * 1.6 + 0.4,
+                speedY: (Math.random() * 0.7 + 0.2) * -1,
+                speedX: (Math.random() - 0.5) * 0.4,
+                alpha: Math.random() * 0.6 + 0.1
+            });
+        }
+
+        function drawSite() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            bgGrad.addColorStop(0, '#030712');
+            bgGrad.addColorStop(0.5, '#080d1a');
+            bgGrad.addColorStop(1, '#0f172a');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.03)';
+            ctx.lineWidth = 1;
+            const gridSize = 50;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            const groundY = canvas.height - 60;
+
+            ctx.fillStyle = '#020617';
+            ctx.fillRect(0, groundY, canvas.width, 60);
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(0, groundY, canvas.width, 3);
+
+            const bWidth = Math.min(400, canvas.width * 0.8);
+            const bHeight = 280;
+            const bX = (canvas.width - bWidth) / 2;
+            const bY = groundY - bHeight;
+
+            ctx.fillStyle = 'rgba(10, 17, 30, 0.92)';
+            ctx.fillRect(bX, bY, bWidth, bHeight);
+            ctx.strokeStyle = 'rgba(245, 158, 11, 0.25)';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(bX, bY, bWidth, bHeight);
+
+            const floors = 6;
+            const cols = 5;
+            const fHeight = bHeight / floors;
+            const cWidth = bWidth / cols;
+
+            for (let f = 0; f < floors; f++) {
+                for (let c = 0; c < cols; c++) {
+                    const wx = bX + c * cWidth + 10;
+                    const wy = bY + f * fHeight + 8;
+                    const ww = cWidth - 20;
+                    const wh = fHeight - 14;
+
+                    ctx.fillStyle = (f === floors - 1 && (c === 1 || c === 3)) ? 'rgba(245, 158, 11, 0.45)' : 'rgba(3, 7, 18, 0.95)';
+                    ctx.fillRect(wx, wy, ww, wh);
+                    ctx.strokeStyle = 'rgba(51, 65, 85, 0.6)';
+                    ctx.strokeRect(wx, wy, ww, wh);
+
+                    if ((f + c) % 3 === 0) {
+                        ctx.fillStyle = 'rgba(245, 158, 11, 0.22)';
+                        ctx.fillRect(wx + 3, wy + 3, ww - 6, wh - 6);
+                    }
+                }
+            }
+
+            ctx.save();
+            const crane1X = Math.max(40, bX - 60);
+            const crane1Y = groundY;
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(crane1X - 5, crane1Y - 300, 10, 300);
+            
+            craneAngle1 += 0.003;
+            const armLen1 = 120;
+            const tipX1 = crane1X + Math.cos(craneAngle1) * armLen1;
+            const tipY1 = (crane1Y - 300) + Math.sin(craneAngle1) * 18;
+
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            ctx.moveTo(crane1X, crane1Y - 300);
+            ctx.lineTo(tipX1, tipY1);
+            ctx.stroke();
+
+            cableLen1 += cableDir1 * 0.35;
+            if(cableLen1 > 110 || cableLen1 < 50) cableDir1 *= -1;
+            
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(tipX1 - 25, tipY1);
+            ctx.lineTo(tipX1 - 25, tipY1 + cableLen1);
+            ctx.stroke();
+            ctx.restore();
+
+            ctx.save();
+            const crane2X = Math.min(canvas.width - 40, bX + bWidth + 60);
+            const crane2Y = groundY;
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(crane2X - 5, crane2Y - 320, 10, 320);
+            
+            craneAngle2 -= 0.0025;
+            const armLen2 = 130;
+            const tipX2 = crane2X + Math.cos(craneAngle2) * armLen2;
+            const tipY2 = (crane2Y - 320) + Math.sin(craneAngle2) * 18;
+
+            ctx.strokeStyle = '#d97706';
+            ctx.lineWidth = 3.5;
+            ctx.beginPath();
+            ctx.moveTo(crane2X, crane2Y - 320);
+            ctx.lineTo(tipX2, tipY2);
+            ctx.stroke();
+
+            cableLen2 += cableDir2 * 0.4;
+            if(cableLen2 > 120 || cableLen2 < 60) cableDir2 *= -1;
+            
+            ctx.strokeStyle = '#f59e0b';
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.moveTo(tipX2 + 30, tipY2);
+            ctx.lineTo(tipX2 + 30, tipY2 + cableLen2);
+            ctx.stroke();
+            ctx.restore();
+
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(245, 158, 11, ${p.alpha})`;
+                ctx.fill();
+
+                p.y += p.speedY;
+                p.x += p.speedX;
+
+                if (p.y < groundY - 280) {
+                    p.y = groundY - 10;
+                    p.x = Math.random() * canvas.width;
+                }
+            });
+
+            requestAnimationFrame(drawSite);
+        }
+
+        drawSite();
+
+        function switchTab(tabId) {
+            const overlay = document.getElementById('page-transition-overlay');
+            overlay.classList.add('animate');
+
+            setTimeout(() => {
+                const tabs = document.querySelectorAll('.tab-content');
+                tabs.forEach(tab => tab.classList.add('hidden'));
+
+                const targetTab = document.getElementById('tab-' + tabId);
+                if (targetTab) targetTab.classList.remove('hidden');
+
+                const heroSection = document.getElementById('hero-section');
+                if (heroSection) {
+                    if (tabId === 'overview') {
+                        heroSection.classList.remove('hidden');
+                    } else {
+                        heroSection.classList.add('hidden');
+                    }
+                }
+
+                const navButtons = ['overview', 'services', 'telemetry', 'logistics', 'compliance', 'demo', 'vision', 'privacy', 'terms'];
+                navButtons.forEach(btn => {
+                    const el = document.getElementById('nav-' + btn);
+                    if (el) {
+                        el.classList.remove('border-amber-500', 'text-amber-400');
+                        el.classList.add('border-transparent', 'text-slate-400');
+                    }
+                });
+
+                const activeBtn = document.getElementById('nav-' + tabId);
+                if (activeBtn) {
+                    activeBtn.classList.remove('border-transparent', 'text-slate-400');
+                    activeBtn.classList.add('border-amber-500', 'text-amber-400');
+                }
+
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 250);
+
+            setTimeout(() => {
+                overlay.classList.remove('animate');
+            }, 500);
+        }
+
+        function toggleModal(show) {
+            const modal = document.getElementById('audit-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
